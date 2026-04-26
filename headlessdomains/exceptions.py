@@ -42,4 +42,4 @@ class PaymentRequiredError(HeadlessDomainsError):
     @property
     def chain_id(self) -> int:
         """The blockchain network ID."""
-        return self.payment_request.get('chainId')
+        return self.payment_request.get('chainId') or self.payment_request.get('chain_id')

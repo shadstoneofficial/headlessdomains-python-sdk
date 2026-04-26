@@ -1,6 +1,6 @@
 # Headless Domains Python SDK
 
-The official Python SDK for the Headless Domains API. Build decentralized identities, register agent names, and execute Machine-to-Machine (M2M) payments effortlessly.
+The official Python SDK for the [Headless Domains](https://headlessdomains.com) API. Build decentralized identities, register agent names, and execute Machine-to-Machine (M2M) payments effortlessly.
 
 ## Installation
 
