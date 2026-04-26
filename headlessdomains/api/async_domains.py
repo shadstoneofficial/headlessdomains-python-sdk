@@ -8,7 +8,7 @@ class AsyncDomainsAPI(BaseAPI):
     
     async def search(self, domain: str) -> DomainAvailability:
         """Check if a domain is available for registration."""
-        response = await self.client.get("/api/v1/domains/search", params={"q": domain})
+        response = await self.client.get("/api/v1/domains", params={"q": domain})
         data = self._handle_response(response)
         
         return DomainAvailability(
@@ -25,11 +25,12 @@ class AsyncDomainsAPI(BaseAPI):
         data = self._handle_response(response)
         
         profile_data = data.get("data", {})
+        domain_info = profile_data.get("domain", {})
         hns_bio = profile_data.get("hns_bio", {})
         
         return DomainProfile(
             name=domain,
-            status=profile_data.get("status"),
+            status=domain_info.get("status") or profile_data.get("status"),
             bio=hns_bio.get("bio"),
             location=hns_bio.get("location"),
             avatar_url=hns_bio.get("avatar"),
@@ -46,7 +47,12 @@ class AsyncDomainsAPI(BaseAPI):
         If the account has sufficient Gems, it will complete immediately.
         If using MPP, this will raise a PaymentRequiredError containing the structured payment request.
         """
-        payload = {"domain": domain, "years": years}
+        try:
+            sld, tld = domain.rsplit(".", 1)
+        except ValueError:
+            raise ValueError("Domain must be in the format 'name.tld'")
+            
+        payload = {"domain": sld, "tld": tld, "years": years}
         response = await self.client.post("/api/v1/domains/register", json=payload)
         
         # This will natively raise PaymentRequiredError if a 402 is returned
@@ -61,7 +67,12 @@ class AsyncDomainsAPI(BaseAPI):
         If the account has sufficient Gems, it will complete immediately.
         If using MPP, this will raise a PaymentRequiredError containing the structured payment request.
         """
-        payload = {"domain": domain, "years": years}
+        try:
+            sld, tld = domain.rsplit(".", 1)
+        except ValueError:
+            raise ValueError("Domain must be in the format 'name.tld'")
+            
+        payload = {"domain": sld, "tld": tld, "years": years}
         response = await self.client.post("/api/v1/domains/renew", json=payload)
         
         # This will natively raise PaymentRequiredError if a 402 is returned
