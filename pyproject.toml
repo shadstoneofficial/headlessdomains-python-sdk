@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "headlessdomains"
+version = "0.1.0"
+description = "Official Python SDK for HeadlessDomains - The Autonomous Identity Layer"
+readme = "README.md"
+authors = [
+    {name = "HeadlessDomains", email = "hello@headlessdomains.com"}
+]
+license = {text = "MIT"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Intended Audience :: Developers",
+]
+dependencies = [
+    "httpx>=0.24.0",
+    "pydantic>=2.0.0"
+]
+requires-python = ">=3.7"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio"
+]
+
+[project.urls]
+"Homepage" = "https://headlessdomains.com"
+"Documentation" = "https://docs.headlessdomains.com"
