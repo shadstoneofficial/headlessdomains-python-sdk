@@ -3,12 +3,12 @@ from . import BaseAPI
 from ..models import DomainAvailability, DomainProfile
 from ..exceptions import PaymentRequiredError
 
-class DomainsAPI(BaseAPI):
-    """Operations related to Domains."""
+class AsyncDomainsAPI(BaseAPI):
+    """Asynchronous operations related to Domains."""
     
-    def search(self, domain: str) -> DomainAvailability:
+    async def search(self, domain: str) -> DomainAvailability:
         """Check if a domain is available for registration."""
-        response = self.client.get("/api/v1/domains/search", params={"q": domain})
+        response = await self.client.get("/api/v1/domains/search", params={"q": domain})
         data = self._handle_response(response)
         
         return DomainAvailability(
@@ -19,9 +19,9 @@ class DomainsAPI(BaseAPI):
             reason=data.get("reason"),
         )
         
-    def lookup(self, domain: str) -> DomainProfile:
+    async def lookup(self, domain: str) -> DomainProfile:
         """Lookup an existing domain's profile and DNS records."""
-        response = self.client.get(f"/api/v1/lookup/{domain}")
+        response = await self.client.get(f"/api/v1/lookup/{domain}")
         data = self._handle_response(response)
         
         profile_data = data.get("data", {})
@@ -38,7 +38,7 @@ class DomainsAPI(BaseAPI):
             integrations=profile_data.get("integrations", {}),
         )
         
-    def register(self, domain: str, years: int = 1) -> Dict[str, Any]:
+    async def register(self, domain: str, years: int = 1) -> Dict[str, Any]:
         """
         Register a new domain.
         
@@ -47,13 +47,13 @@ class DomainsAPI(BaseAPI):
         If using MPP, this will raise a PaymentRequiredError containing the structured payment request.
         """
         payload = {"domain": domain, "years": years}
-        response = self.client.post("/api/v1/domains/register", json=payload)
+        response = await self.client.post("/api/v1/domains/register", json=payload)
         
         # This will natively raise PaymentRequiredError if a 402 is returned
         data = self._handle_response(response)
         return data
         
-    def renew(self, domain: str, years: int = 1) -> Dict[str, Any]:
+    async def renew(self, domain: str, years: int = 1) -> Dict[str, Any]:
         """
         Renew an existing domain.
         
@@ -62,7 +62,7 @@ class DomainsAPI(BaseAPI):
         If using MPP, this will raise a PaymentRequiredError containing the structured payment request.
         """
         payload = {"domain": domain, "years": years}
-        response = self.client.post("/api/v1/domains/renew", json=payload)
+        response = await self.client.post("/api/v1/domains/renew", json=payload)
         
         # This will natively raise PaymentRequiredError if a 402 is returned
         data = self._handle_response(response)

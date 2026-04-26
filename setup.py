@@ -5,15 +5,15 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="headlessdomains",
-    version="0.1.0",
+    version="0.1.1",
     author="Headless Domains",
     author_email="hello@headlessdomains.com",
     description="Official Python SDK for the Headless Domains API",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/headlessdomains/headlessdomains-python-sdk",
+    url="https://github.com/shadstoneofficial/headlessdomains-python-sdk",
     project_urls={
-        "Bug Tracker": "https://github.com/headlessdomains/headlessdomains-python-sdk/issues",
+        "Bug Tracker": "https://github.com/shadstoneofficial/headlessdomains-python-sdk/issues",
         "Documentation": "https://docs.headlessdomains.com/api/python-sdk",
     },
     classifiers=[

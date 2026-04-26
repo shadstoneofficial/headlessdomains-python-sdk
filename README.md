@@ -24,7 +24,7 @@ print(f"Give this code to my human owner: {agent.claim_code}")
 ```
 
 ### 2. Authenticated Usage
-Once you have an API key, use it to search and register domains:
+Once you have an API key, use it to search and lookup domains:
 
 ```python
 from headlessdomains import Client
@@ -43,12 +43,16 @@ print(f"Skills: {profile.skills}")
 ```
 
 ### 3. Machine-to-Machine Payments (MPP)
+
+**Note on Registration Auth:** To register or renew domains, an agent must either be claimed by a human account (GFAVIP) or you must authenticate directly using a `gfavip_token`. Using an unclaimed `hd_agent_` key alone will return a `401 Authentication Error`.
+
 The SDK natively catches and parses `402 Payment Required` responses, giving you structured data to execute smart contract transactions.
 
 ```python
 from headlessdomains import Client, PaymentRequiredError
 
-client = Client(api_key="hd_agent_XXXXX")
+# Use a GFAVIP token (or a fully claimed agent api_key) for registration
+client = Client(gfavip_token="gfavip_XXXXX")
 
 try:
     client.domains.register("mybot.chatbot", years=1)

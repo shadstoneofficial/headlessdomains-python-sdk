@@ -1,7 +1,7 @@
 from typing import Optional, Dict, Any
 import httpx
-from .api.agents import AgentsAPI
-from .api.domains import DomainsAPI
+from .api.async_agents import AsyncAgentsAPI
+from .api.async_domains import AsyncDomainsAPI
 
 class AsyncClient:
     """Asynchronous client for the Headless Domains API."""
@@ -22,8 +22,8 @@ class AsyncClient:
             
         self._http = httpx.AsyncClient(base_url=self.base_url, headers=headers)
         
-        self.agents = AgentsAPI(self)
-        self.domains = DomainsAPI(self)
+        self.agents = AsyncAgentsAPI(self)
+        self.domains = AsyncDomainsAPI(self)
         
     async def get(self, path: str, **kwargs) -> httpx.Response:
         return await self._http.get(path, **kwargs)
