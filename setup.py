@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="headlessdomains",
-    version="0.1.3",
+    version="0.1.4",
     author="Headless Domains",
     author_email="hello@headlessdomains.com",
     description="Official Python SDK for the Headless Domains API",

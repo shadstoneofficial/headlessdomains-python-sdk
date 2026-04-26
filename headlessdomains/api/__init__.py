@@ -19,9 +19,16 @@ class BaseAPI:
             
         if response.status_code == 402:
             # Handle MPP Payment Required Flow
+            payment_request = data.get('payment_request', {})
+            
+            # Extract chain_id from top-level if not in payment_request
+            chain_id = data.get('chain_id') or payment_request.get('chain_id') or payment_request.get('chainId')
+            if chain_id is not None:
+                payment_request['chain_id'] = chain_id
+                
             raise PaymentRequiredError(
                 message=data.get('error', 'Payment Required'),
-                payment_request=data.get('payment_request', {}),
+                payment_request=payment_request,
                 session_id=data.get('session_id', ''),
                 payment_request_b64=data.get('payment_request_b64', '')
             )

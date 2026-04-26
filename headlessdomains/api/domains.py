@@ -24,19 +24,18 @@ class DomainsAPI(BaseAPI):
         response = self.client.get(f"/api/v1/lookup/{domain}")
         data = self._handle_response(response)
         
-        profile_data = data.get("data", {})
-        domain_info = profile_data.get("domain", {})
-        hns_bio = profile_data.get("hns_bio", {})
+        domain_info = data.get("domain", {})
+        hns_bio = data.get("hns_bio", {})
         
         return DomainProfile(
             name=domain,
-            status=domain_info.get("status") or profile_data.get("status"),
+            status=domain_info.get("status"),
             bio=hns_bio.get("bio"),
             location=hns_bio.get("location"),
             avatar_url=hns_bio.get("avatar"),
             urls=hns_bio.get("urls", []),
-            skills=profile_data.get("skills", []),
-            integrations=profile_data.get("integrations", {}),
+            skills=data.get("skills", []),
+            integrations=data.get("integrations", {}),
         )
         
     def register(self, domain: str, years: int = 1) -> Dict[str, Any]:
