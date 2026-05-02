@@ -55,7 +55,7 @@ from headlessdomains import Client, PaymentRequiredError
 client = Client(gfavip_token="gfavip_XXXXX")
 
 try:
-    client.domains.register("mybot.chatbot", years=1)
+    client.register("mybot", "chatbot", years=1)
     print("Registered successfully with existing Gems!")
 except PaymentRequiredError as e:
     print(f"Payment Required!")
@@ -64,6 +64,40 @@ except PaymentRequiredError as e:
     print(f"Session ID to use in Memo: {e.session_id}")
     
     # ... execute your web3 transaction ...
+```
+
+### 4. Workflows and MCP (Model Context Protocol)
+
+You can register agents with rich workflows (such as MCP tool connections) directly at registration time. This allows agents to seamlessly integrate with GitHub Company OS, Claude, and other agentic workflows:
+
+```python
+from headlessdomains import Client
+
+client = Client(gfavip_token="gfavip_XXXXX")
+
+# Register an agent and configure workflows in a single line
+me = client.register(
+    "mystore", 
+    "agent", 
+    workflows={
+        "mcp": {
+            "version": "2024-11",
+            "enabled": True,
+            "servers": [
+                {
+                    "name": "catalog-tool",
+                    "endpoint": "mcp://tools/catalog",
+                    "description": "Agentic product feed & enrichment"
+                }
+            ],
+            "claude_compatible": True,
+            "auto_map_skills": True
+        }
+    }
+)
+
+# You can also update workflows on an existing agent
+client.update_bio("mystore.agent", workflows={"mcp": {"enabled": False}})
 ```
 
 ## Async Support
