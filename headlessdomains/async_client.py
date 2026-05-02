@@ -31,6 +31,14 @@ class AsyncClient:
     async def post(self, path: str, **kwargs) -> httpx.Response:
         return await self._http.post(path, **kwargs)
         
+    async def aregister(self, domain: str, namespace: str, years: int = 1, payment_method: str = "gems", workflows: dict = None) -> Dict[str, Any]:
+        """Convenience method to register a domain asynchronously."""
+        return await self.domains.register(domain, namespace, years, payment_method, workflows)
+        
+    async def aupdate_bio(self, domain: str, workflows: dict = None, **kwargs) -> Dict[str, Any]:
+        """Convenience method to update an agent's bio and workflows asynchronously."""
+        return await self.domains.update_bio(domain, workflows, **kwargs)
+        
     async def close(self):
         await self._http.aclose()
         

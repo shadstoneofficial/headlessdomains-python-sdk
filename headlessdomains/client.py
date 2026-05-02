@@ -31,6 +31,14 @@ class Client:
     def post(self, path: str, **kwargs) -> httpx.Response:
         return self._http.post(path, **kwargs)
         
+    def register(self, domain: str, namespace: str, years: int = 1, payment_method: str = "gems", workflows: dict = None) -> Dict[str, Any]:
+        """Convenience method to register a domain."""
+        return self.domains.register(domain, namespace, years, payment_method, workflows)
+        
+    def update_bio(self, domain: str, workflows: dict = None, **kwargs) -> Dict[str, Any]:
+        """Convenience method to update an agent's bio and workflows."""
+        return self.domains.update_bio(domain, workflows, **kwargs)
+        
     def close(self):
         self._http.close()
         

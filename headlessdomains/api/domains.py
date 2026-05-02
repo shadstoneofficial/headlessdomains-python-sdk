@@ -38,7 +38,7 @@ class DomainsAPI(BaseAPI):
             integrations=data.get("integrations", {}),
         )
         
-    def register(self, domain: str, years: int = 1) -> Dict[str, Any]:
+    def register(self, domain: str, namespace: str, years: int = 1, payment_method: str = "gems", workflows: dict = None) -> Dict[str, Any]:
         """
         Register a new domain.
         
@@ -46,12 +46,15 @@ class DomainsAPI(BaseAPI):
         If the account has sufficient Gems, it will complete immediately.
         If using MPP, this will raise a PaymentRequiredError containing the structured payment request.
         """
-        try:
-            sld, tld = domain.rsplit(".", 1)
-        except ValueError:
-            raise ValueError("Domain must be in the format 'name.tld'")
+        payload = {
+            "domain": domain,
+            "tld": namespace,
+            "years": years,
+            "payment_method": payment_method
+        }
+        if workflows is not None:
+            payload["workflows"] = workflows
             
-        payload = {"domain": sld, "tld": tld, "years": years}
         response = self.client.post("/api/v1/domains/register", json=payload)
         
         # This will natively raise PaymentRequiredError if a 402 is returned
@@ -75,5 +78,20 @@ class DomainsAPI(BaseAPI):
         response = self.client.post("/api/v1/domains/renew", json=payload)
         
         # This will natively raise PaymentRequiredError if a 402 is returned
+        data = self._handle_response(response)
+        return data
+
+    def update_bio(self, domain: str, workflows: dict = None, **kwargs) -> Dict[str, Any]:
+        """
+        Update an agent's bio/profile and workflows.
+        
+        Pass any bio fields as kwargs (e.g. bio="Hello world").
+        The `workflows` parameter is specifically supported.
+        """
+        payload = dict(kwargs)
+        if workflows is not None:
+            payload["workflows"] = workflows
+            
+        response = self.client.post(f"/api/v1/domains/{domain}/bio", json=payload)
         data = self._handle_response(response)
         return data
